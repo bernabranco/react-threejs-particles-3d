@@ -1,0 +1,76 @@
+body{
+  position:relative;
+  width:100%;
+  height:100vh;
+  margin:0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+p, h1 {
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+}
+
+#buttonContainer{
+  position: absolute;
+  width:20%;
+  height:20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  bottom: 0;
+  right: 0;
+  z-index:1;
+}
+
+#buttonContainer2{
+  position: absolute;
+  width:20%;
+  height:20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  bottom: 0;
+  right: 0;
+  z-index:1;
+}
+
+#exporter1{
+  position: relative;
+  width: 100%;
+  font-size: 2vw;
+}
+
+#exporter2{
+  position: relative;
+  width: 100%;
+  font-size: 2vw;
+}
+
+#image{
+  position: absolute;
+  width:1000px;
+  height: 1000px;
+  z-index: -1;
+}
+
+#imageCanvas{
+  position: absolute;
+  width: 100%;
+  height:100%;
+  z-index: -1;
+}
+
+#canvasExport{
+  position: absolute;
+}
+
+#canvasPreview{
+  position: absolute;
+  width:400px!important;
+  height:400px!important;
+}
+
