@@ -5,7 +5,8 @@ import Threejs from './components/Threejs.js'
 
 import {ExportControls} from './components/Exporter'
 import {Audio} from './components/Audio'
-import image from './texture/circle.png'
+import image from './texture/blue.jpg'
+import Preview from './components/Preview'
 
 function App() {
   
@@ -13,15 +14,14 @@ function App() {
     <div className="App">
       <div id="container">
 
-       <img alt="image1" id="image" src={image}/>
+      <img alt="image1" id="image" src={image}/>
       <canvas id="imageCanvas"></canvas> 
- 
-      <Threejs id="canvasExport" width="8000" height="8000"/>
+      <Audio></Audio>
       <ExportControls/>
-      
-      
-      
-      {/* <Threejs id="canvasPreview" width="8000" height="8000"/>   */}
+      <Threejs id="canvasExport" width="8000" height="8000"/>
+      <Preview/>
+
+
       </div>
     </div>
   );

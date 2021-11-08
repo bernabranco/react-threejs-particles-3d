@@ -1,10 +1,10 @@
 
 export function getImageData(ctx, image){
     //get image data for specified pixel range
-    var imageData = ctx.getImageData(0,0,image.width,image.height)
+    var imageData = ctx.getImageData(0,0,image.width,image.height);
     //data is pixel range r,g,b,a
     var data = imageData.data;
-    console.log(data)
+    console.log(data.length)
     return data;
 }
 
@@ -32,8 +32,6 @@ export function getBlue(data){
     for(let i = 2; i<data.length; i+=4){
         imageBlue.push(data[i]);
     }
-
-    console.log(imageBlue)
     return imageBlue 
 }
     

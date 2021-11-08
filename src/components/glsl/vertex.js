@@ -1,20 +1,18 @@
 const vertexShader = `
 
     attribute float size;
+    attribute float id;
+   
     varying vec3 vColor;
     uniform float u_time;
     uniform float u_mousex;
     uniform float u_mousey;
     uniform float u_width;
     uniform float u_height;
+    uniform float u_sound;
     uniform float u_size;
-
-
     varying float vnoise;
     varying vec3 cnoise;
-
-   
-
 
     //NOISE 3D
     //https://github.com/ashima/webgl-noise/blob/master/src/noise3D.glsl
@@ -152,79 +150,33 @@ const vertexShader = `
     vColor = color;
     vec4 newPosition = vec4( position, 1. );
     
-    float speed = 0.3;
-    float time = u_time * speed;
+    //float speed = 5.0*snoise(newPosition.xyz*0.001 + u_time*0.1);
+    float speed = 1.0;
+    float time =  u_time + speed;
 
     vnoise = snoise(newPosition.xyz + time);
     cnoise = curlNoise(newPosition.xyz + time);
 
-    float soundOffset = 1.;
+    // change vertex position
+    //newPosition.x += 150.0*curlNoise(newPosition.xyz*0.005 + time*0.1).x;
+    //newPosition.y += 150.0*curlNoise(newPosition.xyz*0.002 + time*0.1).y;
+    //newPosition.z += 150.0*curlNoise(newPosition.xyz*0.001+ time*0.1).z;
 
-    //change size of vertex
-    //float soundSize = size+u_size*sin(newPosition.x);
+    //newPosition.x += 5.0*curlNoise(newPosition.xyz*0.005 + time*0.1).x;
+    //newPosition.y += 50.0*curlNoise(newPosition.xyz*0.005 + time*0.1).y;
+    newPosition.z += 50.0*curlNoise(newPosition.xyz*0.005+ time).z;
+    // change size of vertex
+ /*    float colorx = abs(1.*size*snoise(position*0.02 + time*0.5));
+    float colory = abs(1.*size*snoise(position*0.02 + time*0.9));
+    float colorz = abs(1.*size*snoise(position*0.2 + time*1.5));
+    vColor.x = colorx;
+    vColor.y = colory;
+    vColor.z = colorz; */
+    //gl_PointSize = size*abs(5.0*snoise(position*0.1 + time*0.5));
     gl_PointSize = size;
-    //gl_PointSize = 2.0+1.0*(distance(vec2(0,0), newPosition.xy*0.03-15.));
 
-    //change position of vertex
-    //newPosition.x += 1.0*noise(newPosition.y*0.01+time);
-    //newPosition.y += 1.0*noise(newPosition.x*0.01+time);
-    //newPosition.z += 1.0*noise(newPosition.z*0.01+time);
-
-    //perfect square
-    //newPosition.x = 50.0*sin(newPosition.x+time);
-    //newPosition.y = 50.0*sin(newPosition.y+time);
-    //newPosition.z = 50.0*sin(newPosition.z+time);
-
-    //heart line
-    //newPosition.x = -25.+50.0*noise(newPosition.y*1.22+time);
-    //newPosition.y = -25.+50.0*noise(newPosition.x*0.22+time);
-    //newPosition.z = 5.0*sin(newPosition.z+time);
-
-    //noise1d
-    for(float i = 0.; i<10.; i++){
-      //newPosition.x += 50.0*sin(newPosition.y*0.02*i + newPosition.x*0.01 + time*0.01);
-      //newPosition.y += 1.0*sin(newPosition.x*0.01*i + time*0.01);
-      //newPosition.z = 0.0;
-    }
-   
-
-    //simples noise
-    //newPosition.x += 100.0*snoise(newPosition.yyy*0.01 + time*0.2);
-    //newPosition.y += 0.0*snoise(newPosition.xxx*0.02 + time*0.1);
-    //newPosition.z += 0.0*snoise(newPosition.zzz*0.02 + time*0.1);
-
-    //newPosition.x += 30.0*snoise((newPosition.xyz*0.01*u_mousex+time) + time);
-    //newPosition.y += 30.0*snoise(newPosition.zyx*0.001*u_mousey + time);;
-    //newPosition.z += 30.0*snoise(newPosition.xzy*0.01*u_mousey + time);
-
-    //newPosition.x += 550.0*soundOffset*snoise(newPosition.xyz*0.001*u_offsetX + time);
-    //newPosition.y += 550.0*soundOffset*snoise(newPosition.xyz*0.001*u_offsetY + time);;
-    //newPosition.z += 550.0*soundOffset*snoise(newPosition.xzy*0.001*u_offsetZ + time);
-
-    //newPosition.xyz += 150.0*curlNoise(newPosition.xyz*0.002 + newPosition.xyz*0.0000*u_size  + u_offsetX + time ).xyz;
-    //newPosition.xyz += 50.0*curlNoise(newPosition.xyz*0.05 + u_offsetX + time).xyz;
-    newPosition.xyz += 10.0*curlNoise(newPosition.xyz*0.01 + time);
-
-    //newPosition.xyz += 500.0*snoise(newPosition.xyz*0.002 + u_offsetX + time);
-    //newPosition.xyz += 550.0*curlNoise(newPosition.xyz*0.001 + u_offsetX);
-    //newPosition.xyz += 1550.0*snoise(newPosition.xyz*0.001 + u_offsetX);
-
-    //newPosition.y += 50.0*curlNoise(newPosition.zyx*0.02 + time);
-    //newPosition.z += 50.0*curlNoise(newPosition.yzx*0.03 + time);
-
-    //sphere grid
-    
-      //float dist = distance(vec2(0,0),newPosition.xy);
-      //if(dist < 100.0){
-        //newPosition.xyz += 150.*curlNoise(newPosition.xyz*0.005 + u_offsetX+time);  
-      //}
-     
-    
-    
     vec4 mvPosition = modelViewMatrix * newPosition;
-
     gl_Position = projectionMatrix * mvPosition;
-
   }
 `
 

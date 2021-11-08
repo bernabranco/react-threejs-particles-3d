@@ -276,4 +276,7 @@ const hexColors = [
     '#FFFFFF',
 ]
 
-export {hexColors}
+const background = hexColors[parseInt(Math.random()*hexColors.length)]
+const particleColor = hexColors[parseInt(Math.random()*hexColors.length)]
+
+export {hexColors, background, particleColor}

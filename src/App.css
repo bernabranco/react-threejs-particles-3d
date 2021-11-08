@@ -59,18 +59,22 @@ p, h1 {
 
 #imageCanvas{
   position: absolute;
-  width: 100%;
-  height:100%;
-  z-index: -1;
+  width: 0px;
+  height:0px;
+  z-index: 1;
 }
 
 #canvasExport{
   position: absolute;
+  width:100%;
+  height: 100%;
+  z-index: 0;
 }
 
 #canvasPreview{
   position: absolute;
   width:400px!important;
   height:400px!important;
+  z-index: 1;
 }
 
