@@ -5,7 +5,6 @@ import Stats from './Stats.js' // performance library (fps)
 import { vertexShader } from './glsl/vertex.js'
 import { fragmentShader } from './glsl/fragment.js'
 import {ExportImage} from './Exporter'
-import * as imgAnalize from './Image' // analysed image data
 import texture1 from '../texture/particle0.jpeg' // particles point texture
 import * as hexColors from './colors.js' // background colors array
 import * as audio  from './Audio.js' // audio analysis (frequency + volume)
@@ -14,32 +13,7 @@ import * as preview from './Preview.js' // preview window
 
 export default function Threejs(props) {
 
-	function imageAnalyze(){
-
-		var imgSrc = texture1;
-		var img = new Image();
-		img.crossOrigin = "anonymous";
-		img.src = imgSrc;
-
-      img.onload = function() {
-
-		var width = img.width;
-		var height = img.height;
-
-        var canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext("2d");
-		ctx.drawImage(img, 0, 0);
-
-		var imageData = ctx.getImageData(0, 0, width, height);
-
-        document.body.appendChild(canvas);
-        three(imageData, width, height);
-      };
-	}
-
-	function three( imageData, width, height ){
+	function three(){
 
 		//particle settings
 		const PARTICLES = traits.PARTICLE_COUNT;
@@ -71,44 +45,34 @@ export default function Threejs(props) {
 		const positions = [];
 		const colors = [];
 		const sizes = [];
-		const particle_id = [];
 		//const color = new THREE.Color(hexColors.particleColor);
 
-		var color = new THREE.Color();
-		for (let i = 0; i < imageData.data.length; i+=4) {
-				const r = imageData.data[i + 0];
-				const g = imageData.data[i + 1];
-				const b = imageData.data[i + 2];
-				const a = imageData.data[i + 3];
-				color.setRGB(r, g, b);
-				colors.push(color.r, color.g, color.b);
-		 }
-
-		// Setup particle positions (2D Grid)
+		// Setup 2D Grid
+		var xCount = Math.pow(PARTICLES, 1/2);
+		var yCount = Math.pow(PARTICLES, 1/2);
 		var steps = traits.STEPS;
-		for(let x = 0; x < width; x+=steps){
-			for(let y = 0; y < height; y+=steps){
-				positions.push( x - width*0.5, y - height*0.5, 0 );
-				sizes.push( PARTICLESIZE );
+		for(let x = 1; x < xCount; x+=steps){
+			for(let y = 1; y < yCount; y+=steps){
+				positions.push( x - xCount/2 ); 	// particle x
+				positions.push( y - yCount/2 ); 	// particle y
+				positions.push( 0 ); 				// particle z
 			}
 		}
 
+		var color = new THREE.Color(hexColors.particleColor);
+
 		// Setup shader particles colors and sizes
 		for (var i = 0; i<PARTICLES; i++){
-			//const hexColor = parseInt(Math.random()*traits.colorPallete.length)
-			//color.setHSL( i/PARTICLES*traits.HSL_RANDOM, 1, 0.5 )
-			//console.log(hexColors.hexColors[10])
-			//color.setRGB(imageRed[i], imageGreen[i],imageBlue[i]);
-			//color.setRGB(Math.random(), Math.random(), Math.random());
-			//colors.push( color.r, color.g, color.b );
+			//color.setHSL( i/PARTICLES*100, 1, 0.5 )
+			//color.setRGB(1., 1., 1.)
+			colors.push( color.r, color.g, color.b );
 			//array with size of each particle
-			//sizes.push( PARTICLESIZE );
+			sizes.push( PARTICLESIZE );
 		}
 
 		geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ).setUsage( THREE.DynamicDrawUsage ) );
 		geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ));
 		geometry.setAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ).setUsage( THREE.DynamicDrawUsage ) );
-		geometry.setAttribute( 'id', new THREE.Float32BufferAttribute( particle_id, 1 ).setUsage( THREE.DynamicDrawUsage ) );
 
 		// Setup material uniforms
 		const uniforms = {
@@ -179,7 +143,7 @@ export default function Threejs(props) {
 			//particleSystem.rotation.z = frameCount*0.001;
 
 			material.uniforms.u_time.value = frameCount*0.005;
-			material.uniforms.u_sound.value = audio.volume;
+			//material.uniforms.u_sound.value = audio.volume;
 			material.uniforms.u_mousex.value = mouseX;
 			material.uniforms.u_mousey.value = mouseY;
 
@@ -193,8 +157,8 @@ export default function Threejs(props) {
 			controls.update()
 
 			// update preview canvas
-			//var previewCanvas = renderer.getContext('2d');
-			//preview.drawPreview(renderer, previewCanvas);
+			var previewCanvas = renderer.getContext('2d');
+			preview.drawPreview(renderer, previewCanvas);
 
 			renderer.render( scene, camera );
 			requestAnimationFrame( animate );
@@ -228,18 +192,7 @@ export default function Threejs(props) {
 
 
 	useEffect(() => {
-		window.onload = ()=>{
-			var canvas = document.getElementById('imageCanvas')
-			var image = document.getElementById('image')
-			var ctx = canvas.getContext('2d')
-			ctx.drawImage(image,0,0,canvas.width, canvas.height)
-			
-			const imageRed = imgAnalize.getRed(imgAnalize.getImageData(ctx, canvas));
-			const imageGreen = imgAnalize.getGreen(imgAnalize.getImageData(ctx, canvas));
-			const imageBlue = imgAnalize.getBlue(imgAnalize.getImageData(ctx, canvas));
-	
-			imageAnalyze();
-		}
+		three()
 	});
 
 	return (

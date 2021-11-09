@@ -3,7 +3,10 @@ import {React} from 'react'
 // create preview canvas
 export default function Preview(){
     return(
-        <canvas id="canvasPreview"></canvas>
+        <div id="previewContainer">
+            <canvas id="canvasPreview"></canvas>
+        </div>
+        
     )
 }
 

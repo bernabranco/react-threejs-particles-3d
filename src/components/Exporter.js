@@ -12,7 +12,6 @@ function ExportControls() {
             <button id='exporter1' onClick={() => ExportImage()}>
                 EXPORT IMAGE
            </button>
-           
            <button id='exporter2'>
                 EXPORT VIDEO
            </button>

@@ -1,9 +1,9 @@
 const vertexShader = `
 
     attribute float size;
-    attribute float id;
-   
     varying vec3 vColor;
+    varying vec4 newPosition;
+    varying vec3 cnoise;
     uniform float u_time;
     uniform float u_mousex;
     uniform float u_mousey;
@@ -11,8 +11,6 @@ const vertexShader = `
     uniform float u_height;
     uniform float u_sound;
     uniform float u_size;
-    varying float vnoise;
-    varying vec3 cnoise;
 
     //NOISE 3D
     //https://github.com/ashima/webgl-noise/blob/master/src/noise3D.glsl
@@ -148,30 +146,25 @@ const vertexShader = `
   void main() {
 
     vColor = color;
-    vec4 newPosition = vec4( position, 1. );
+    newPosition = vec4( position, 1. );
     
     //float speed = 5.0*snoise(newPosition.xyz*0.001 + u_time*0.1);
-    float speed = 1.0;
+    float speed = 0.;
     float time =  u_time + speed;
 
-    vnoise = snoise(newPosition.xyz + time);
-    cnoise = curlNoise(newPosition.xyz + time);
+    //curlnoise variable
+    cnoise = curlNoise(newPosition.xyz*0.05);
 
     // change vertex position
-    //newPosition.x += 150.0*curlNoise(newPosition.xyz*0.005 + time*0.1).x;
-    //newPosition.y += 150.0*curlNoise(newPosition.xyz*0.002 + time*0.1).y;
-    //newPosition.z += 150.0*curlNoise(newPosition.xyz*0.001+ time*0.1).z;
+    newPosition.x += 150.0*curlNoise(newPosition.xyz*0.005 + time*0.1).x;
+    newPosition.y += 150.0*curlNoise(newPosition.xyz*0.002 + time*0.1).y;
+    newPosition.z += 150.0*curlNoise(newPosition.xyz*0.001+ time*0.1).z;
 
     //newPosition.x += 5.0*curlNoise(newPosition.xyz*0.005 + time*0.1).x;
     //newPosition.y += 50.0*curlNoise(newPosition.xyz*0.005 + time*0.1).y;
-    newPosition.z += 50.0*curlNoise(newPosition.xyz*0.005+ time).z;
+    //newPosition.z += 50.0*curlNoise(newPosition.xyz*0.001+ time).z;
+    
     // change size of vertex
- /*    float colorx = abs(1.*size*snoise(position*0.02 + time*0.5));
-    float colory = abs(1.*size*snoise(position*0.02 + time*0.9));
-    float colorz = abs(1.*size*snoise(position*0.2 + time*1.5));
-    vColor.x = colorx;
-    vColor.y = colory;
-    vColor.z = colorz; */
     //gl_PointSize = size*abs(5.0*snoise(position*0.1 + time*0.5));
     gl_PointSize = size;
 

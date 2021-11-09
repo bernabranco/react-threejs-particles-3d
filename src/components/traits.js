@@ -9,10 +9,10 @@ const offset = [
     generateRandomFloatInRange(-1.,1.),
 ]
 
-const PARTICLE_COUNT = 30000;
-const PARTICLE_SIZE = 1;
+const PARTICLE_COUNT = 1000000;
+const PARTICLE_SIZE = 5;
 const HSL_RANDOM = Math.random()*40.;
-const STEPS = 1;
+const STEPS = 5;
 
 const HSL = [
     generateRandomFloatInRange(-10,10),
