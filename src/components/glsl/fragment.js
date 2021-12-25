@@ -16,8 +16,7 @@ return vec3(color * cosAngle + cross(k, color) * sin(hue) + k * dot(k, color) * 
 
 void main() {
 
-  vec3 noise = cnoise;
-  vec3 color = vColor * abs(noise);
+  vec3 color = vColor;
   //change hue of pixel color
   //color = hueShift(color, u_time*10.);
 

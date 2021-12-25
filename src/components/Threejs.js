@@ -60,11 +60,11 @@ export default function Threejs(props) {
 		}
 
 		var color = new THREE.Color(hexColors.particleColor);
-
+		
 		// Setup shader particles colors and sizes
 		for (var i = 0; i<PARTICLES; i++){
 			//color.setHSL( i/PARTICLES*100, 1, 0.5 )
-			//color.setRGB(1., 1., 1.)
+			color.setRGB(1., 1., 1.)
 			colors.push( color.r, color.g, color.b );
 			//array with size of each particle
 			sizes.push( PARTICLESIZE );
@@ -101,6 +101,9 @@ export default function Threejs(props) {
 		// Setup mesh
 		const mesh = new THREE.Points( geometry, material);
 		mesh.rotation.z = -Math.PI / 2;
+		mesh.rotation.x = Math.random()*10;
+		mesh.rotation.y = Math.random()*10;
+		mesh.rotation.z = Math.random()*10;
 		scene.add( mesh );
 
 		// Setup lights
@@ -120,6 +123,7 @@ export default function Threejs(props) {
 		renderer.setPixelRatio( window.devicePixelRatio );
 		renderer.setSize( canvasSize[0], canvasSize[1] );
 		renderer.autoClearColor = true;
+		renderer.setClearColor(0x000000, 0.01);
 
 		// Setup orbit Controls for camera
 		var OrbitControls = require('three-orbit-controls')(THREE)
@@ -138,12 +142,8 @@ export default function Threejs(props) {
 			frameCount++;
 
 			// Rotate mesh
-			//particleSystem.rotation.x = frameCount*0.001;
-			//particleSystem.rotation.y = frameCount*0.001;
-			//particleSystem.rotation.z = frameCount*0.001;
-
 			material.uniforms.u_time.value = frameCount*0.005;
-			//material.uniforms.u_sound.value = audio.volume;
+			material.uniforms.u_sound.value = audio.volume;
 			material.uniforms.u_mousex.value = mouseX;
 			material.uniforms.u_mousey.value = mouseY;
 
@@ -154,7 +154,7 @@ export default function Threejs(props) {
 			}
 
 			// update orbit controls
-			controls.update()
+			//controls.update()
 
 			// update preview canvas
 			var previewCanvas = renderer.getContext('2d');

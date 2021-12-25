@@ -13,6 +13,7 @@ function App() {
       <ExportControls/>
       <Threejs id="canvasExport" width="8000" height="8000"/>
       <Preview/>
+      <Audio/>
       </div>
     </div>
   );

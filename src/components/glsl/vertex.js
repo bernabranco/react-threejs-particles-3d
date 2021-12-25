@@ -3,7 +3,6 @@ const vertexShader = `
     attribute float size;
     varying vec3 vColor;
     varying vec4 newPosition;
-    varying vec3 cnoise;
     uniform float u_time;
     uniform float u_mousex;
     uniform float u_mousey;
@@ -108,7 +107,6 @@ const vertexShader = `
     }
 
     //CURL NOISE
-
     vec3 snoiseVec3( vec3 x ){
 
       float s  = snoise(vec3( x ));
@@ -145,15 +143,15 @@ const vertexShader = `
      
   void main() {
 
-    vColor = color;
     newPosition = vec4( position, 1. );
+
+    float nAmp = 0.0;
+    vec3 cnoise = curlNoise(newPosition.xyz*0.05) * nAmp;
+    vColor = color - abs(cnoise);
     
     //float speed = 5.0*snoise(newPosition.xyz*0.001 + u_time*0.1);
     float speed = 0.;
     float time =  u_time + speed;
-
-    //curlnoise variable
-    cnoise = curlNoise(newPosition.xyz*0.05);
 
     // change vertex position
     newPosition.x += 150.0*curlNoise(newPosition.xyz*0.005 + time*0.1).x;
@@ -165,8 +163,8 @@ const vertexShader = `
     //newPosition.z += 50.0*curlNoise(newPosition.xyz*0.001+ time).z;
     
     // change size of vertex
-    //gl_PointSize = size*abs(5.0*snoise(position*0.1 + time*0.5));
-    gl_PointSize = size;
+    gl_PointSize = size + 3.0*u_sound*snoise(position*0.1 + time*0.5);
+    //gl_PointSize = size;
 
     vec4 mvPosition = modelViewMatrix * newPosition;
     gl_Position = projectionMatrix * mvPosition;
